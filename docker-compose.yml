@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+    app:
+        container_name: laravel_app
+        build: .
+        ports:
+            - 8000:8000
+        volumes:
+            - .:/var/www/html
+            - /var/www/html/node_modules
+            - /var/www/html/vendor
+        depends_on:
+            - db
+
+    # composer:
+    #     container_name: composer
+    #     image: composer:latest
+    #     depends_on:
+    #         - app
+
+    #     volumes:
+    #         - .:/app
+    #     command: ["composer", "update"]
+    #     # restart: always
+
+    # npm:
+    #     container_name: npm
+    #     image: node:16.13.1
+    #     depends_on:
+    #         - app
+    #     volumes:
+    #         - .:/app
+    #     command: ["npm", "update"]
+    #     # restart: always
+
+    db:
+        image: mysql:8.0
+        ports:
+            - "3306:3306"
+        environment:
+            - MYSQL_DATABASE=${DB_DATABASE}
+            - MYSQL_USER=${DB_USERNAME}
+            - MYSQL_PASSWORD=${DB_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+        volumes:
+            - db-data:/var/lib/mysql
+volumes:
+    db-data: ~
